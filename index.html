@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aviator Simulator 2015</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #1c1c1c;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .countdown {
+      font-size: 36px;
+      margin: 20px 0;
+    }
+
+    .history {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .round {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2b2b2b;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: bold;
+      color: #00ff00;
+      box-shadow: 0 0 5px #00ff00;
+    }
+
+    .round.low {
+      color: #ff0000;
+      box-shadow: 0 0 5px #ff0000;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .round {
+      animation: pulse 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Aviator Simulator 2015</div>
+
+    <div class="countdown">00:10</div>
+
+    <div class="history" id="history">
+      <!-- Past round results will appear here -->
+    </div>
+
+    <button class="btn" onclick="startRound()">Start Round</button>
+  </div>
+
+  <script>
+    let countdownElement = document.querySelector('.countdown');
+    let historyElement = document.getElementById('history');
+    let timer;
+
+    function startRound() {
+      let timeLeft = 10;
+      countdownElement.textContent = `00:${timeLeft}`;
+
+      timer = setInterval(() => {
+        timeLeft--;
+        countdownElement.textContent = timeLeft < 10 ? `00:0${timeLeft}` : `00:${timeLeft}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          generateResult();
+        }
+      }, 1000);
+    }
+
+    function generateResult() {
+      let result = (Math.random() * 10).toFixed(2); // Random multiplier between 0 and 10
+      let roundElement = document.createElement('div');
+      roundElement.textContent = `${result}x`;
+      roundElement.className = 'round';
+
+      // Highlight low or high values
+      if (result < 2) {
+        roundElement.classList.add('low');
+      }
+
+      historyElement.prepend(roundElement);
+
+      // Limit history to 10 rounds
+      if (historyElement.children.length > 10) {
+        historyElement.removeChild(historyElement.lastChild);
+      }
+    }
+  </script>
+</body>
+</html>
